@@ -1,16 +1,21 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: app-of-apps
+  name: nginx-ingress
   namespace: argocd
 spec:
   project: default
   source:
     repoURL: https://github.com/duytrq/app_of_apps
     targetRevision: HEAD
-    path: apps
+    path: charts/nginx-ingress
+    helm:
+      valueFiles:
+        - values.yaml
   destination:
     server: https://kubernetes.default.svc
-    namespace: argocd
+    namespace: ingress-nginx
   syncPolicy:
-    automated: null
+    automated:
+      prune: true
+      selfHeal: true
