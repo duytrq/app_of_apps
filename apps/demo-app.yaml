@@ -18,7 +18,7 @@ spec:
         - values-demo.yaml
   destination:
     server: https://kubernetes.default.svc
-    namespace: demo
+    namespace: demo-app
   syncPolicy:
     automated:
       prune: true
