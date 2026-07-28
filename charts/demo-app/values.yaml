@@ -14,7 +14,7 @@ app:
   revisionHistoryLimit: 1
   minReadySeconds: 5
   port: 3000
-  existingSecret: demo-stack-db
+  existingSecret: demo-app-db
   strategy:
     maxUnavailable: 0
     maxSurge: 1
@@ -32,7 +32,7 @@ postgres:
     repository: postgres
     tag: '17-alpine'
     pullPolicy: IfNotPresent
-  existingSecret: demo-stack-db
+  existingSecret: demo-app-db
   podSecurityContext:
     runAsNonRoot: true
     runAsUser: 70

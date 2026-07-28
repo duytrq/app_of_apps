@@ -9,14 +9,14 @@ image:
 
 app:
   replicas: 1
-  existingSecret: demo-stack-db
+  existingSecret: demo-app-db
 
 podDisruptionBudget:
   enabled: false
   minAvailable: 1
 
 postgres:
-  existingSecret: demo-stack-db
+  existingSecret: demo-app-db
   storage:
     createStorageClass: false
     className: local-path
