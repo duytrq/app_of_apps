@@ -1,0 +1,18 @@
+Managed by ArgoCD (app-of-apps pattern).
+---------------------------------------
+
+Chart:     {{ .Chart.Name }}-{{ .Chart.Version }}
+Namespace: {{ .Release.Namespace }}
+
+The database Secret must exist before syncing this Application:
+
+  kubectl -n {{ .Release.Namespace }} create secret generic {{ .Values.app.existingSecret }} \
+    --from-literal=POSTGRES_DB=demo \
+    --from-literal=POSTGRES_USER=demo \
+    --from-literal=POSTGRES_PASSWORD='<random-password>' \
+    --from-literal=DATABASE_URL='postgresql://demo:<url-encoded-password>@{{ include "demo-app.fullname" . }}-postgres:5432/demo'
+
+After ArgoCD syncs, verify health:
+
+  argocd app get demo-app
+  kubectl -n {{ .Release.Namespace }} get pods

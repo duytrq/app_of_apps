@@ -3,6 +3,9 @@ kind: Application
 metadata:
   name: demo-app
   namespace: argocd
+  # Allow the parent app-of-apps to prune this Application when removed.
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
@@ -12,6 +15,7 @@ spec:
     helm:
       valueFiles:
         - values.yaml
+        - values-demo.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: demo
@@ -21,3 +25,4 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+      - ServerSideApply=true

@@ -1,18 +1,86 @@
-replicaCount: 1
-
 image:
-  repository: nginx
-  tag: 'alpine'
+  repository: 'ghcr.io/duytrq/demo-app'
+  tag: 'latest'
+  digest: ''
   pullPolicy: IfNotPresent
+  pullSecrets: []
+
+nameOverride: ''
+fullnameOverride: ''
+
+app:
+  replicas: 1
+  # ArgoCD manages rollbacks; keep only 1 old ReplicaSet to reduce cluster noise.
+  revisionHistoryLimit: 1
+  minReadySeconds: 5
+  port: 3000
+  existingSecret: demo-stack-db
+  strategy:
+    maxUnavailable: 0
+    maxSurge: 1
+  topologySpreadConstraints: []
+  resources:
+    requests:
+      cpu: 50m
+      memory: 96Mi
+    limits:
+      cpu: 250m
+      memory: 256Mi
+
+postgres:
+  image:
+    repository: postgres
+    tag: '17-alpine'
+    pullPolicy: IfNotPresent
+  existingSecret: demo-stack-db
+  podSecurityContext:
+    runAsNonRoot: true
+    runAsUser: 70
+    runAsGroup: 70
+    fsGroup: 70
+    seccompProfile:
+      type: RuntimeDefault
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+  storage:
+    createStorageClass: false
+    className: local-path
+    size: 8Gi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
 
 service:
   type: ClusterIP
   port: 80
 
-resources:
-  requests:
-    cpu: 50m
-    memory: 32Mi
-  limits:
-    cpu: 100m
-    memory: 64Mi
+podDisruptionBudget:
+  enabled: false
+  minAvailable: 1
+
+ingress:
+  enabled: true
+  className: traefik
+  host: demo.local
+  annotations: {}
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  seccompProfile:
+    type: RuntimeDefault
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: true

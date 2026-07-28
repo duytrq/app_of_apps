@@ -1,0 +1,28 @@
+# values-demo.yaml - k3d Environment Overlay
+# This overlay overrides specific settings from values.yaml for the demo environment running on k3d.
+
+image:
+  repository: 'ghcr.io/duytrq/demo-app'
+  tag: 'latest'
+  digest: ''
+  pullSecrets: []
+
+app:
+  replicas: 1
+  existingSecret: demo-stack-db
+
+podDisruptionBudget:
+  enabled: false
+  minAvailable: 1
+
+postgres:
+  existingSecret: demo-stack-db
+  storage:
+    createStorageClass: false
+    className: local-path
+    size: 2Gi
+
+ingress:
+  enabled: true
+  className: traefik
+  host: 'demo.localhost'
