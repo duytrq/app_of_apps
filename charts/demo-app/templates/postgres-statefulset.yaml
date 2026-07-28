@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: {{ include "demo-app.fullname" . }}-postgres
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
   labels:
     {{- include "demo-app.labels" . | nindent 4 }}
     app.kubernetes.io/component: postgres

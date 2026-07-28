@@ -2,6 +2,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "demo-app.fullname" . }}-postgres-headless
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
   labels:
     {{- include "demo-app.labels" . | nindent 4 }}
     app.kubernetes.io/component: postgres
@@ -19,6 +21,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "demo-app.fullname" . }}-postgres
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
   labels:
     {{- include "demo-app.labels" . | nindent 4 }}
     app.kubernetes.io/component: postgres
