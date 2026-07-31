@@ -84,3 +84,26 @@ securityContext:
     drop:
       - ALL
   readOnlyRootFilesystem: true
+
+vault:
+  enabled: false
+  address: ''
+  kvMountPath: 'kvv2'
+  secretPath: ''
+  refreshInterval: '1h'
+  caSecretName: 'vault-ca-cert'
+  caSecretKey: 'ca.crt'
+  appRole:
+    authPath: 'approle'
+    secretName: 'vault-approle'
+    roleIdKey: 'role-id'
+    secretIdKey: 'secret-id'
+  secretKeys:
+    - vaultKey: POSTGRES_DB
+      kubeKey: POSTGRES_DB
+    - vaultKey: POSTGRES_USER
+      kubeKey: POSTGRES_USER
+    - vaultKey: POSTGRES_PASSWORD
+      kubeKey: POSTGRES_PASSWORD
+    - vaultKey: DATABASE_URL
+      kubeKey: DATABASE_URL

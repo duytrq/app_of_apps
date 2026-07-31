@@ -22,3 +22,9 @@ ingress:
   enabled: true
   className: traefik
   host: 'demo.localhost'
+vault:
+  enabled: true
+  address: 'https://46.137.235.153:8200/'
+  role: 'demo-app'
+  secretPath: 'jits/demo-app/stg/db'
+  caSecretName: 'vault-ca-cert'
