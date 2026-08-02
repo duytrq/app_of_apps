@@ -4,7 +4,7 @@
 image:
   repository: 'ghcr.io/duytrq/demo-app'
   tag: 'latest'
-  digest: 'sha256:d87ab0d004db6d44b1e4df34e190b2ec835cc8baef04f6f390b016d9a6c466bc'
+  digest: 'sha256:009767c6faec453a2904f675b93c84d62df360a61408e6797f29688a4c793383'
   pullSecrets: []
 app:
   replicas: 1
