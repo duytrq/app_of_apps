@@ -1,0 +1,55 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: {{ template "canary-demo.fullname" . }}
+  labels:
+    {{- include "canary-demo.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      {{- include "canary-demo.selectorLabels" . | nindent 6 }}
+  strategy:
+    canary:
+      canaryService: {{ template "canary-demo.fullname" . }}-canary
+      stableService: {{ template "canary-demo.fullname" . }}
+      {{- if .Values.analysis.enabled }}
+      analysis:
+        templates:
+          - templateName: {{ template "canary-demo.fullname" . }}-error-rate
+        startingStep: 1
+        args:
+          - name: service-name
+            value: {{ template "canary-demo.fullname" . }}-canary
+      {{- end }}
+      steps:
+        {{- range .Values.canary.steps }}
+        - setWeight: {{ .weight }}
+        - pause: { duration: {{ .pauseDuration }} }
+        {{- end }}
+  template:
+    metadata:
+      labels:
+        {{- include "canary-demo.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.image.containerPort }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 5
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}

@@ -1,0 +1,27 @@
+{{- if .Values.analysis.enabled }}
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: {{ template "canary-demo.fullname" . }}-error-rate
+  labels:
+    {{- include "canary-demo.labels" . | nindent 4 }}
+spec:
+  args:
+    - name: service-name
+  metrics:
+    - name: error-rate
+      interval: {{ .Values.analysis.interval }}
+      count: {{ .Values.analysis.count }}
+      successCondition: "len(result) == 0 || result[0] < {{ .Values.analysis.errorRateThreshold }}"
+      failureLimit: {{ .Values.analysis.failureLimit }}
+      provider:
+        prometheus:
+          address: {{ .Values.analysis.prometheusAddress }}
+          query: |
+            sum(rate(
+              http_request_duration_seconds_count{status=~"5.*",service="{{ "{{args.service-name}}" }}"}[1m]
+            )) /
+            sum(rate(
+              http_request_duration_seconds_count{service="{{ "{{args.service-name}}" }}"}[1m]
+            ))
+{{- end }}
