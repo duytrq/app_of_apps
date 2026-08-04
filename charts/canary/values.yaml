@@ -1,7 +1,7 @@
 replicaCount: 3
 
 ingress:
-  host: canary-demo.local
+  host: canary-demo.localhost
 
 image:
   repository: argoproj/rollouts-demo

@@ -19,9 +19,9 @@ spec:
           address: {{ .Values.analysis.prometheusAddress }}
           query: |
             sum(rate(
-              nginx_ingress_controller_requests{ingress="{{ "{{args.ingress-name}}" }}",namespace="canary",status=~"5.."}[1m]
+              nginx_ingress_controller_requests{ingress="{{ "{{args.ingress-name}}" }}",status=~"5.."}[1m]
             )) /
             sum(rate(
-              nginx_ingress_controller_requests{ingress="{{ "{{args.ingress-name}}" }}",namespace="canary"}[1m]
+              nginx_ingress_controller_requests{ingress="{{ "{{args.ingress-name}}" }}"}[1m]
             ))
 {{- end }}
