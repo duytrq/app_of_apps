@@ -24,6 +24,10 @@ spec:
     port: 443
     protocol: TCP
     targetPort: https
+  - name: metrics
+    port: 10254
+    protocol: TCP
+    targetPort: 10254
   externalIPs:
   - {{ .Values.controller.service.externalIP }}
   selector:

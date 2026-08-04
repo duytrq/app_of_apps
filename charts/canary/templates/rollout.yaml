@@ -14,14 +14,17 @@ spec:
     canary:
       canaryService: {{ template "canary-demo.fullname" . }}-canary
       stableService: {{ template "canary-demo.fullname" . }}
+      trafficRouting:
+        nginx:
+          stableIngress: {{ template "canary-demo.fullname" . }}
       {{- if .Values.analysis.enabled }}
       analysis:
         templates:
           - templateName: {{ template "canary-demo.fullname" . }}-error-rate
         startingStep: 1
         args:
-          - name: service-name
-            value: {{ template "canary-demo.fullname" . }}-canary
+          - name: ingress-name
+            value: {{ template "canary-demo.fullname" . }}
       {{- end }}
       steps:
         {{- range .Values.canary.steps }}

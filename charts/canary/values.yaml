@@ -1,8 +1,11 @@
 replicaCount: 3
 
+ingress:
+  host: canary-demo.local
+
 image:
   repository: argoproj/rollouts-demo
-  tag: bad-green
+  tag: blue
   pullPolicy: IfNotPresent
   containerPort: 8080
 

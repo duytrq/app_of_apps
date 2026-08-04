@@ -7,7 +7,7 @@ metadata:
     {{- include "canary-demo.labels" . | nindent 4 }}
 spec:
   args:
-    - name: service-name
+    - name: ingress-name
   metrics:
     - name: error-rate
       interval: {{ .Values.analysis.interval }}
@@ -19,9 +19,9 @@ spec:
           address: {{ .Values.analysis.prometheusAddress }}
           query: |
             sum(rate(
-              http_request_duration_seconds_count{status=~"5.*",service="{{ "{{args.service-name}}" }}"}[1m]
+              nginx_ingress_controller_requests{ingress="{{ "{{args.ingress-name}}" }}",namespace="canary",status=~"5.."}[1m]
             )) /
             sum(rate(
-              http_request_duration_seconds_count{service="{{ "{{args.service-name}}" }}"}[1m]
+              nginx_ingress_controller_requests{ingress="{{ "{{args.ingress-name}}" }}",namespace="canary"}[1m]
             ))
 {{- end }}
