@@ -2,7 +2,7 @@ replicaCount: 3
 
 image:
   repository: argoproj/rollouts-demo
-  tag: blue
+  tag: green
   pullPolicy: IfNotPresent
   containerPort: 8080
 
@@ -13,7 +13,7 @@ service:
 analysis:
   enabled: true
   prometheusAddress: http://prometheus-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090
-  errorRateThreshold: "0.05"
+  errorRateThreshold: '0.05'
   interval: 30s
   count: 5
   failureLimit: 1
