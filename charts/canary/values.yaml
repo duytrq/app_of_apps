@@ -2,7 +2,7 @@ replicaCount: 3
 
 image:
   repository: argoproj/rollouts-demo
-  tag: green
+  tag: bad-green
   pullPolicy: IfNotPresent
   containerPort: 8080
 
